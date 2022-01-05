@@ -94,10 +94,40 @@
   _.reject = function(collection, test) {
     // TIP: see if you can re-use _.filter() here, without simply
     // copying code in and modifying it
+    return _.filter(collection, function(currentItem) {
+      return !test(currentItem);
+    });
   };
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array, isSorted, iterator) {
+
+    //if iterator run it on original array, if result values of new obj === undefined
+    //give value of original element in array
+    //push values into result string
+
+    var resultObj = {};
+    var result = [];
+
+    if (iterator !== undefined) {
+      _.each(array, function(item, index) {
+        if (resultObj[iterator(item)] === undefined) {
+          resultObj[iterator(item)] = item;
+        }
+      });
+    } else {
+      _.each(array, function(item, index) {
+        if (resultObj[item] === undefined) {
+          resultObj[item] = item;
+        }
+      });
+    }
+
+    _.each(resultObj, function(item, index) {
+      result.push(item);
+    });
+
+    return result;
   };
 
 
