@@ -280,6 +280,14 @@
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
   _.defaults = function(obj) {
+    _.each(arguments, function(item, index) {
+      _.each(item, function(value, key) {
+        if (obj[key] === undefined) {
+          obj[key] = value;
+        }
+      });
+    });
+    return obj;
   };
 
 
@@ -322,7 +330,24 @@
   // _.memoize should return a function that, when called, will check if it has
   // already computed the result for the given argument and return that value
   // instead if possible.
+
+  //input is a function
+  //output is a function
+
   _.memoize = function(func) {
+    var storedArguments = {};
+
+    //run function on arguments and store them in an object
+    return function () {
+      var args = JSON.stringify(arguments);
+      if (storedArguments[args]) {
+        return storedArguments[args];
+      } else {
+        var result = func.apply(this, arguments);
+        storedArguments[args] = result;
+        return result;
+      }
+    };
   };
 
   // Delays a function for the given number of milliseconds, and then calls
