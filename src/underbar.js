@@ -101,11 +101,6 @@
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array, isSorted, iterator) {
-
-    //if iterator run it on original array, if result values of new obj === undefined
-    //give value of original element in array
-    //push values into result string
-
     var resultObj = {};
     var result = [];
 
@@ -184,15 +179,12 @@
   //          No accumulator is given so the first element is used.
   _.reduce = function(collection, iterator, accumulator) {
     var result = accumulator || 0;
-    //loop array
     _.each(collection, function(item, index) {
-      //if accumulator is defined start with value
       if (accumulator === undefined && index === 0) {
         result = collection[index];
       } else {
         result = iterator(result, item);
       }
-      //if not, set result = to first value then continue
     });
     return result;
   };
@@ -212,6 +204,28 @@
 
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
+    var result = true;
+
+    if (iterator === undefined) {
+      if (collection.length === 1) {
+        return !!collection[0];
+      }
+      _.reduce(collection, function(memo, item) {
+        if (!item) {
+          result = false;
+        }
+      });
+    } else {
+      if (collection.length === 1) {
+        return !!iterator(collection[0]);
+      }
+      _.reduce(collection, function(memo, item) {
+        if (!iterator(item)) {
+          result = false;
+        }
+      });
+    }
+    return result;
     // TIP: Try re-using reduce() here.
   };
 
@@ -219,6 +233,20 @@
   // provided, provide a default one
   _.some = function(collection, iterator) {
     // TIP: There's a very clever way to re-use every() here.
+    var result = false;
+    iterator = iterator || _.identity;
+
+    if (collection.length === 0) {
+      return false;
+    }
+
+    _.each(collection, function(item) {
+      if (iterator(item)) {
+        result = true;
+      }
+    });
+
+    return result;
   };
 
 
@@ -241,6 +269,12 @@
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
   _.extend = function(obj) {
+    _.each(arguments, function(item, index) {
+      _.each(item, function(value, key) {
+        obj[key] = value;
+      });
+    });
+    return obj;
   };
 
   // Like extend, but doesn't ever overwrite a key that already
