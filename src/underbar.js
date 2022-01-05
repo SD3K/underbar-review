@@ -356,7 +356,20 @@
   // The arguments for the original function are passed after the wait
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
+
+  //input function and time in ms (#)
+  //output is running the function
+
   _.delay = function(func, wait) {
+    var args = [];
+    _.each(arguments, function(item, index) {
+      if (index > 1) {
+        args.push(item);
+      }
+    });
+    setTimeout(function() {
+      func.apply(this, args);
+    }, wait);
   };
 
 
@@ -370,7 +383,20 @@
   // TIP: This function's test suite will ask that you not modify the original
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
+
+  //reverse loop
+  //bypass position 0
+  //generate random number based on current iterator
+  //swap that number with current iterator
   _.shuffle = function(array) {
+    var copy = array.slice();
+    for (var i = copy.length - 1; i > 0; i--) {
+      var currentVal = copy[i];
+      var randomIndex = Math.floor(Math.random() * i);
+      copy[i] = copy[randomIndex];
+      copy[randomIndex] = currentVal;
+    }
+    return copy;
   };
 
 
